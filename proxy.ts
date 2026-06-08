@@ -1,9 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
-// El nombre de la función DEBE ser "middleware" obligatoriamente para Next.js
-export async function middleware(request: NextRequest) {
-  // Supabase actualiza la sesión y retorna la respuesta interna con las cookies
+export async function proxy(request: NextRequest) {
   return await updateSession(request)
 }
 
