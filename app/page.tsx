@@ -6,30 +6,32 @@ import { formatMatchDate, formatMatchTime } from '@/lib/utils'
 
 // 1. FORZAMOS A QUE SEA DINÁMICA: Eliminamos el revalidate fijo
 // Esto evita que Next.js intente pre-renderizar estáticamente datos de sesión privados.
-export const dynamic = 'force-dynamic' 
+export const dynamic = 'force-dynamic'
 
 export default async function LandingPage() {
-  const supabase = await createClient()
-  
-  // Usamos una captura segura por si falla la conexión con Supabase en el primer render
   let user = null
+  let upcomingMatches: any[] = []
+
+  // Encapsulamos Supabase por completo para que NADA rompa el renderizado de la página
   try {
+    const supabase = await createClient()
     const { data } = await supabase.auth.getUser()
     user = data?.user
   } catch (error) {
-    console.error("Error obteniendo usuario:", error)
+    console.error("Supabase Auth Error en Landing:", error)
+    // Si falla, dejamos user en null para que al menos cargue la interfaz
   }
 
-  // Si ya hay sesión, redirigimos limpiamente
+  // Si efectivamente hay usuario, metemos la redirección fuera del bloque de inicialización
   if (user) {
     redirect('/dashboard')
   }
 
-  let upcomingMatches: any[] = []
+  // Intentamos traer los partidos para el Prode
   try { 
     upcomingMatches = await getUpcomingMatches(4) 
   } catch (error) {
-    console.error("Error obteniendo partidos próximos:", error)
+    console.error("Error al traer partidos en Landing:", error)
   }
 
   return (
