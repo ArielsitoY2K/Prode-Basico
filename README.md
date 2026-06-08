@@ -55,3 +55,4 @@ El cron job (`vercel.json`) se ejecuta cada hora automáticamente.
 | Error | 0 |
 
 Los puntos se calculan automáticamente via trigger PostgreSQL.
+"# Prode-Basico" 
