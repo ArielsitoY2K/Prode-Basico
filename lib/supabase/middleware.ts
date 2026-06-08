@@ -25,7 +25,6 @@ export async function updateSession(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Protected routes
   const protectedPaths = ['/dashboard', '/fixture', '/grupos', '/pronosticos', '/ranking']
   const isProtected = protectedPaths.some(p => request.nextUrl.pathname.startsWith(p))
 
@@ -36,7 +35,6 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Redirect logged-in users away from auth pages
   const authPaths = ['/auth/login', '/auth/register']
   const isAuthPage = authPaths.some(p => request.nextUrl.pathname.startsWith(p))
   if (isAuthPage && user) {
