@@ -6,14 +6,11 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
+  // Quitamos la barra del filtro para probar si la landing carga sin pasar por Supabase
   matcher: [
-    /*
-     * Coincide con todas las rutas de solicitud excepto las que empiezan por:
-     * - _next/static (archivos estáticos)
-     * - _next/image (optimización de imágenes)
-     * - favicon.ico (icono de la pestaña)
-     * - Imágenes con extensiones comunes
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/dashboard/:path*', 
+    '/pronosticos/:path*', 
+    '/fixture/:path*',
+    '/ranking/:path*'
   ],
 }
