@@ -4,17 +4,36 @@ import { redirect } from 'next/navigation'
 import { getUpcomingMatches } from '@/lib/api/queries'
 import { formatMatchDate, formatMatchTime } from '@/lib/utils'
 
-export const revalidate = 300
+// 1. FORZAMOS A QUE SEA DINÁMICA: Eliminamos el revalidate fijo
+// Esto evita que Next.js intente pre-renderizar estáticamente datos de sesión privados.
+export const dynamic = 'force-dynamic' 
 
 export default async function LandingPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (user) redirect('/dashboard')
+  
+  // Usamos una captura segura por si falla la conexión con Supabase en el primer render
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data?.user
+  } catch (error) {
+    console.error("Error obteniendo usuario:", error)
+  }
+
+  // Si ya hay sesión, redirigimos limpiamente
+  if (user) {
+    redirect('/dashboard')
+  }
 
   let upcomingMatches: any[] = []
-  try { upcomingMatches = await getUpcomingMatches(4) } catch {}
+  try { 
+    upcomingMatches = await getUpcomingMatches(4) 
+  } catch (error) {
+    console.error("Error obteniendo partidos próximos:", error)
+  }
 
   return (
+    // ... TODO TU CÓDIGO JSX SIGUE EXACTAMENTE IGUAL ABAJO ...
     <div className="min-h-screen bg-black">
       <header className="border-b border-[#1a1a1a] px-4 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
