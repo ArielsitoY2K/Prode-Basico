@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-
-// Usamos rutas relativas directas saliendo de la carpeta 'app'
 import { createClient } from '../lib/supabase/server'
 import { getUpcomingMatches } from '../lib/api/queries'
 import { formatMatchDate, formatMatchTime } from '../lib/utils'
 
+// FORZAMOS A QUE CORRA EN EL EDGE RUNTIME IGUAL QUE EL PROXY
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 export default async function LandingPage() {
