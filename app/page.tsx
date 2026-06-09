@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
-// Ahora usamos rutas relativas directas saliendo de la carpeta 'app'
+// Usamos rutas relativas directas saliendo de la carpeta 'app'
 import { createClient } from '../lib/supabase/server'
 import { getUpcomingMatches } from '../lib/api/queries'
 import { formatMatchDate, formatMatchTime } from '../lib/utils'
