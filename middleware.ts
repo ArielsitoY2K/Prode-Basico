@@ -1,31 +1,30 @@
-// middleware.ts (Ubicado en la raíz de tu proyecto, al mismo nivel que /app)
+// middleware.ts
 import { NextResponse, type NextRequest } from 'next/server'
-import { updateSession } from '@/lib/supabase/middleware'
 
-// CRITICAL: Next.js exige que la función se llame exactamente "middleware"
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // 1. BYPASS ABSOLUTO PARA LA RAÍZ: Evita bucles en la landing
-  if (pathname === '/') {
+  // 1. Si entra a la raíz o a las APIs, pasa directo sin tocar nada
+  if (pathname === '/' || pathname.startsWith('/api/')) {
     return NextResponse.next()
   }
 
-  // 2. BYPASS ABSOLUTO PARA APIS: Deja que los endpoints (/api/sync) 
-  // manejen su propia seguridad interna con el CRON_SECRET
-  if (pathname.startsWith('/api/')) {
-    return NextResponse.next()
+  // 2. Para el resto de las páginas (dashboard, pronosticos, etc.)
+  // Chequeamos de forma nativa si existe la cookie de sesión de Supabase.
+  // Supabase suele guardar el token en una cookie que empieza con "sb-"
+  const hasSessionCookie = request.cookies.getAll().some(cookie => cookie.name.startsWith('sb-'))
+
+  if (!hasSessionCookie) {
+    // Si no tiene la cookie de login, lo mandamos derecho a loguearse
+    const loginUrl = new URL('/auth/login', request.url)
+    return NextResponse.redirect(loginUrl)
   }
 
-  // 3. Para rutas protegidas de la app (dashboard, ranking, etc.), corre Supabase Auth
-  return await updateSession(request)
+  return NextResponse.next()
 }
 
 export const config = {
   matcher: [
-    /*
-     * Intercepta todo excepto archivos estáticos, imágenes y favicons.
-     */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
