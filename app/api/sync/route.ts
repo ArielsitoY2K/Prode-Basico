@@ -47,8 +47,14 @@ export async function POST(req: NextRequest) {
       groupsMapByApiId[g.api_id] = g.id
     })
 
-    // 2. Sincronizar Equipos (Cruzando el código de grupo directo del objeto t.group)
+// 2. Sincronizar Equipos (Cruzando el código de grupo directo del objeto t.group)
     const teams = await fetchAllTeams()
     for (const t of teams) {
-      // Obtenemos la letra del grupo desde el objeto nativo que inyecta el adaptador de la API V2
-      const groupLetter = (t as any).group_name?.replace(/Grupo |Group /gi, '').trim().charAt(
+      // Usamos métodos de string tradicionales para evitar que Turbopack falle al parsear
+      const rawGroupName = (t as any).group_name || '';
+      const cleanGroupName = rawGroupName.replaceAll('Grupo ', '').replaceAll('Group ', '').trim();
+      const groupLetter = cleanGroupName.charAt(0) || (t as any).group?.code || null;
+      
+      const groupUUID = groupLetter ? groupsMapByCode[groupLetter] : null
+
+      const { error } = await supabase.from('teams').upsert(
