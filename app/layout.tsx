@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-// 1. Cambiamos la ruta a relativa directa para saltar problemas de alias
+// 1. Ahora cambiamos la ruta a relativa directa para saltar problemas de alias
 import { Providers } from '../components/layout/Providers'
 
 export const metadata: Metadata = {
