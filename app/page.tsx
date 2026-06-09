@@ -1,11 +1,11 @@
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { getUpcomingMatches } from '@/lib/api/queries'
-import { formatMatchDate, formatMatchTime } from '@/lib/utils'
 
-// 1. FORZAMOS A QUE SEA DINÁMICA: Eliminamos el revalidate fijo
-// Esto evita que Next.js intente pre-renderizar estáticamente datos de sesión privados.
+// Usamos rutas relativas directas saliendo de la carpeta 'app'
+import { createClient } from '../lib/supabase/server'
+import { getUpcomingMatches } from '../lib/api/queries'
+import { formatMatchDate, formatMatchTime } from '../lib/utils'
+
 export const dynamic = 'force-dynamic'
 
 export default async function LandingPage() {

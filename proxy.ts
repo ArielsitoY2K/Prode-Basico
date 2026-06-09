@@ -6,11 +6,11 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Quitamos la barra del filtro para probar si la landing carga sin pasar por Supabase
   matcher: [
     '/dashboard/:path*', 
     '/pronosticos/:path*', 
     '/fixture/:path*',
-    '/ranking/:path*'
+    '/ranking/:path*',
+    '/grupos/:path*'
   ],
 }
