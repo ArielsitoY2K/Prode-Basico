@@ -1,3 +1,4 @@
+// app/dashboard/page.tsx
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { getUpcomingMatches, getLiveMatches, getUserProfile, getUserRank } from '@/lib/api/queries'
@@ -6,13 +7,20 @@ import { MatchCard } from '@/components/matches/MatchCard'
 import Link from 'next/link'
 import { formatMatchDate, formatMatchTime } from '@/lib/utils'
 
-export const revalidate = 60
+// Forzamos a que el dashboard sea 100% dinámico. 
+// Al no haber middleware, cada petición evalúa la sesión en tiempo real.
+export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login')
+  
+  // Si no hay usuario en las cookies, el Server Component corta el flujo y redirige
+  if (!user) {
+    redirect('/auth/login')
+  }
 
+  // Ejecutamos las consultas en paralelo para máxima velocidad de carga
   const [profile, rank, upcoming, live] = await Promise.allSettled([
     getUserProfile(user.id),
     getUserRank(user.id),

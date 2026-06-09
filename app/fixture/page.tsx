@@ -1,17 +1,24 @@
+// app/fixture/page.tsx
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { getAllMatches, getGroups } from '@/lib/api/queries'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { MatchCard } from '@/components/matches/MatchCard'
 import { FixtureClient } from './FixtureClient'
 
-export const revalidate = 1800 // 30 min
+// Forzamos renderizado dinámico en servidor para evaluar la sesión 
+// y traer el fixture actualizado al instante cuando haya goles.
+export const dynamic = 'force-dynamic'
 
 export default async function FixturePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login')
+  
+  // Si no hay sesión válida en el navegador, rebota directo al login
+  if (!user) {
+    redirect('/auth/login')
+  }
 
+  // Traemos todos los partidos y los grupos en paralelo
   const [matches, groups] = await Promise.allSettled([
     getAllMatches(),
     getGroups(),
