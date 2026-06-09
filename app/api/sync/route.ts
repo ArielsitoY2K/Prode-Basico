@@ -159,3 +159,7 @@ function normalizeStatus(status: string): string {
   const map: Record<string, string> = { not_started: 'scheduled', scheduled: 'scheduled', in_progress: 'live', live: 'live', half_time: 'halftime', halftime: 'halftime', finished: 'finished', ft: 'finished', postponed: 'postponed', cancelled: 'cancelled' }
   return map[status?.toLowerCase()] || 'scheduled'
 }
+
+export async function GET() {
+  return NextResponse.json({ mensaje: "El backend está vivo en Vercel, Carlos" })
+}
