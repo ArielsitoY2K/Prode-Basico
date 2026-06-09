@@ -2,9 +2,9 @@
   "name": "prode2026",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
+ "scripts": {
   "dev": "next dev",
-  "build": "ls -la && ls -la app && next build",
+  "build": "next build",
   "start": "next start",
   "lint": "next lint"
 },

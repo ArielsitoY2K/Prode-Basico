@@ -4,9 +4,12 @@ import { createClient } from '../lib/supabase/server'
 import { getUpcomingMatches } from '../lib/api/queries'
 import { formatMatchDate, formatMatchTime } from '../lib/utils'
 
+// FORZAMOS RENDERIZADO DINÁMICO EN NODE.JS ESTÁNDAR
 export const dynamic = 'force-dynamic'
+export const revalidate = 0 // Evita por completo que Next.js guarde la página en caché de producción
 
 export default async function LandingPage() {
+  // ... tu lógica de try/catch para user y partidos sigue igual abajo
   let user = null
   let upcomingMatches: any[] = []
 
