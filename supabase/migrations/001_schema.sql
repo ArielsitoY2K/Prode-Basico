@@ -3,6 +3,25 @@
 -- Ejecutar en Supabase SQL Editor (una sola vez)
 -- ============================================================
 
+-- Al principio de tu archivo de migración local:
+SET session_replication_role = 'replica';
+
+DROP TRIGGER IF EXISTS on_match_finish ON matches;
+DROP FUNCTION IF EXISTS calculate_match_predictions();
+
+DROP TABLE IF EXISTS sync_log CASCADE;
+DROP TABLE IF EXISTS app_config CASCADE;
+DROP TABLE IF EXISTS leaderboard CASCADE;
+DROP TABLE IF EXISTS predictions CASCADE;
+DROP TABLE IF EXISTS profiles CASCADE;
+DROP TABLE IF EXISTS match_events CASCADE;
+DROP TABLE IF EXISTS matches CASCADE;
+DROP TABLE IF EXISTS group_standings CASCADE;
+DROP TABLE IF EXISTS teams CASCADE;
+DROP TABLE IF EXISTS groups CASCADE;
+
+SET session_replication_role = 'origin';
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ── Teams ─────────────────────────────────────────────────────────────────────
